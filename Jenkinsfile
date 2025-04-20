@@ -4,31 +4,17 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/sriravi25/nginx_CICD.git'
+                git 'https://github.com/sriravi25/nginx_CICD.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Deploy') {
             steps {
-                sh 'npm install'
+                sh '''
+                    sudo cp index.html /var/www/html/index.html
+                    sudo systemctl restart nginx
+                '''
             }
-        }
-
-        stage('Build') {
-            steps {
-                sh 'npm run build'
-            }
-        }
-
-        // Optional: You can add more stages like Test or Deploy
-    }
-
-    post {
-        success {
-            echo 'Pipeline ran successfully!'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
